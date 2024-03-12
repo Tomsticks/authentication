@@ -34,8 +34,11 @@ app.use(mongoSanitizer());
 app.use(xss());
 app.use(hpp());
 
-app.all("*", (req, res, next) => {
-  next(res.status(404).json({ message: "Invalid url" }));
+app.all("*", function (req, res, next) {
+  res.status(404).json({
+    message: "Page Not Found",
+  });
+  next();
 });
 
 module.exports = app;
