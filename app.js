@@ -8,8 +8,9 @@ const helmet = require("helmet");
 const mongoSanitizer = require("express-mongo-sanitize");
 const xss = require("xss-clean");
 const hpp = require("hpp");
+const cors = require("cors");
 app.use(express.json({ limit: "10kb" }));
-
+app.use(cors());
 // Secure Headers
 app.use(helmet());
 
