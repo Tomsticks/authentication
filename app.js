@@ -33,10 +33,7 @@ app.use(xss());
 app.use(hpp());
 
 app.all("*", (req, res, next) => {
-  const err = new Error(`cant find the route ${req.originalUrl}`);
-  err.message = "invalid url";
-  err.statusCode = 404;
-  next(err);
+  next(res.status(404).json({ message: "Invalid url" }));
 });
 
 app.get("/", (req, res) => {
