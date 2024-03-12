@@ -8,7 +8,7 @@ const helmet = require("helmet");
 const mongoSanitizer = require("express-mongo-sanitize");
 const xss = require("xss-clean");
 const hpp = require("hpp");
-app.use(express.json());
+app.use(express.json({ limit: "10kb" }));
 
 // Secure Headers
 app.use(helmet());
@@ -20,11 +20,13 @@ const limiter = rateLimit({
   limit: 50,
   windowMs: 1000 * 60 * 60,
   message: "too many requests",
-  // headers: true,
   validate: { xForwardedForHeader: false },
 });
-app.use(limiter);
+app.use("/api", limiter);
 // Global middlewares
+app.get("/awake", (req, res) => {
+  res.send("ready");
+});
 app.use(`/${process.env.ROUTE}/auth`, authRoutes);
 app.use(`/${process.env.ROUTE}/users`, userRoutes);
 
@@ -34,10 +36,6 @@ app.use(hpp());
 
 app.all("*", (req, res, next) => {
   next(res.status(404).json({ message: "Invalid url" }));
-});
-
-app.get("/", (req, res) => {
-  res.send("ready");
 });
 
 module.exports = app;
